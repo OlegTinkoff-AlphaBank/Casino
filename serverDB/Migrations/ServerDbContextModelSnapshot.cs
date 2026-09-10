@@ -50,6 +50,11 @@ namespace serverDB.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(0m);
 
+                    b.Property<decimal>("OnAccsAmountLast")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
                     b.Property<decimal>("OnSafeAmount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
@@ -146,6 +151,39 @@ namespace serverDB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("serverDB.GameOutComes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<decimal>("Multiplier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("Weight")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("GameOutComes");
                 });
 
             modelBuilder.Entity("serverDB.GameRound", b =>
@@ -389,6 +427,17 @@ namespace serverDB.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("serverDB.GameOutComes", b =>
+                {
+                    b.HasOne("serverDB.Game", "Game")
+                        .WithMany("GameOutComes")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("serverDB.GameRound", b =>
                 {
                     b.HasOne("serverDB.Game", "Game")
@@ -439,6 +488,8 @@ namespace serverDB.Migrations
 
             modelBuilder.Entity("serverDB.Game", b =>
                 {
+                    b.Navigation("GameOutComes");
+
                     b.Navigation("GameRounds");
                 });
 

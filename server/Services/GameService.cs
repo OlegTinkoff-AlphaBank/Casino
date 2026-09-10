@@ -28,10 +28,11 @@ public class GameService
         return await _db.Games.FindAsync(id);
     }
 
-    public async Task PlayRoundByGameIdAsync(PlayDTO dto, int userId)
+    public async Task<GameOutComes> PlayRoundByGameIdAsync(PlayDTO dto)
     {
-        User? user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        User? user = await _db.Users.FirstOrDefaultAsync(u => u.Id == dto.UserId);
         Game? game = await _db.Games.FirstOrDefaultAsync(g => g.Id == dto.GameId);
+        Activs? activs = await _db.Activs.FirstOrDefaultAsync();
         List<GameOutComes> goc = await _db.GameOutComes.Where(go => go.GameId == dto.GameId && go.IsActive).ToListAsync();
         
         if (user == null) 
@@ -45,6 +46,31 @@ public class GameService
             throw new Exception("bet is not valid");
         
         user.Balance -= dto.BetAmount;
-        //...
+        decimal rate = (game.GameRate + user.GameRate + activs.AllUsersRate + activs.AllGamesRate) / 4m;
+        decimal power = Math.Max(0.1m, 5.0m * (1.0m - rate));
+
+        var modOutComes = goc.Select(g => new
+        {
+            GameOutComes = g,
+            ModWeight = (decimal)Math.Pow((double)g.Weight, (double)power)
+        });
+        
+        decimal totalweight = modOutComes.Sum(m => m.ModWeight);
+        decimal roll = (decimal)Random.Shared.NextDouble() * totalweight;
+        decimal cSum = 0m;
+
+        foreach (var outcome in modOutComes)
+        {
+            cSum += outcome.ModWeight;
+            if (roll <= cSum)
+            {
+                user.Balance += dto.BetAmount * outcome.GameOutComes.Multiplier;
+                await _db.SaveChangesAsync();
+                return outcome.GameOutComes;
+            }
+        }
+        user.Balance += dto.BetAmount;
+        await _db.SaveChangesAsync();
+        throw new Exception("internal game error");
     }
 }

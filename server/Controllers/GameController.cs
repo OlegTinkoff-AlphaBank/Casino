@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using server.DTOs;
 using server.Services;
 
 namespace server.Controllers;
@@ -28,11 +29,10 @@ public class GameController : ControllerBase
         return Ok(await _gameService.GetGameById(id));
     }
 
-    [HttpGet("bet/{betId}")]
+    [HttpGet("bet")]
     [Authorize]
-    public async Task<IActionResult> GetBetById(int betId)
+    public async Task<IActionResult> GetBetById(PlayDTO dto)
     {
-        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        return Ok();
+        return Ok(await _gameService.PlayRoundByGameIdAsync(dto));
     }
 }
