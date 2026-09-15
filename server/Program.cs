@@ -15,6 +15,8 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<BalanceService>();
+builder.Services.AddScoped<DonationService>();
+builder.Services.AddHttpClient();
 
 var jwtKey = builder.Configuration["Jwt:Key"]!;
 
