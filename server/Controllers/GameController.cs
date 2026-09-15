@@ -29,10 +29,11 @@ public class GameController : ControllerBase
         return Ok(await _gameService.GetGameById(id));
     }
 
-    [HttpGet("bet")]
+    [HttpPost("bet")]
     [Authorize]
     public async Task<IActionResult> GetBetById(PlayDTO dto)
     {
-        return Ok(await _gameService.PlayRoundByGameIdAsync(dto));
+        var result = await _gameService.PlayRoundByGameIdAsync(dto);
+        return Ok(new {result});
     }
 }

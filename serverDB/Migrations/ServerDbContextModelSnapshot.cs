@@ -229,8 +229,7 @@ namespace serverDB.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.HasIndex("IdempotencyKey")
-                        .IsUnique();
+                    b.HasIndex("IdempotencyKey");
 
                     b.HasIndex("UserId");
 

@@ -4,7 +4,7 @@ namespace server.Controllers;
 
 
 [ApiController]
-[Route("balance")]
+[Route("api/v1.0/[controller]")]
 public class BalanceController : ControllerBase
 {
     

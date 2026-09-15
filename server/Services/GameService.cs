@@ -1,3 +1,6 @@
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using serverDB;
 using server.DTOs;
@@ -28,8 +31,9 @@ public class GameService
         return await _db.Games.FindAsync(id);
     }
 
-    public async Task<GameOutComes> PlayRoundByGameIdAsync(PlayDTO dto)
+    public async Task<string> PlayRoundByGameIdAsync(PlayDTO dto)
     {
+        Console.WriteLine("starting round");
         User? user = await _db.Users.FirstOrDefaultAsync(u => u.Id == dto.UserId);
         Game? game = await _db.Games.FirstOrDefaultAsync(g => g.Id == dto.GameId);
         Activs? activs = await _db.Activs.FirstOrDefaultAsync();
@@ -44,6 +48,8 @@ public class GameService
             throw new Exception("Game not found");
         if (dto.BetAmount > game.MaxBet || dto.BetAmount < game.MinBet)
             throw new Exception("bet is not valid");
+
+        Console.WriteLine("Checking ready");
         
         user.Balance -= dto.BetAmount;
         decimal rate = (game.GameRate + user.GameRate + activs.AllUsersRate + activs.AllGamesRate) / 4m;
@@ -59,14 +65,45 @@ public class GameService
         decimal roll = (decimal)Random.Shared.NextDouble() * totalweight;
         decimal cSum = 0m;
 
+        Console.WriteLine("before rate");
+
         foreach (var outcome in modOutComes)
         {
             cSum += outcome.ModWeight;
             if (roll <= cSum)
             {
                 user.Balance += dto.BetAmount * outcome.GameOutComes.Multiplier;
+                var jsondata = new 
+                {
+                    GameOutComes = new 
+                    {
+                        Id = outcome.GameOutComes.Id,
+                        GameId = outcome.GameOutComes.GameId,
+                        Multiplier = outcome.GameOutComes.Multiplier,
+                        Weight = outcome.GameOutComes.Weight,
+                        IsActive = outcome.GameOutComes.IsActive,
+                        GameName = outcome.GameOutComes.Game?.Name 
+                    },
+                    ModWeight = new 
+                    { 
+                        weight = outcome.ModWeight
+                    }
+                };
+                string jsonOut = JsonSerializer.Serialize(jsondata,
+                    new JsonSerializerOptions
+                        { Encoder = JavaScriptEncoder.Default, WriteIndented = true });
+                _db.GameRounds.Add(new GameRound
+                {
+                    GameId = dto.GameId,
+                    UserId = user.Id,
+                    PlayedAt = DateTime.UtcNow,
+                    Status = "finished",
+                    ResultData = jsonOut,
+                    Payout = dto.BetAmount *  outcome.GameOutComes.Multiplier,
+                    BetAmount = dto.BetAmount,
+                });
                 await _db.SaveChangesAsync();
-                return outcome.GameOutComes;
+                return jsonOut;
             }
         }
         user.Balance += dto.BetAmount;

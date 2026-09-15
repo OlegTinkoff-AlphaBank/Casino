@@ -72,7 +72,7 @@ public class ServerDbContext : DbContext
             e.Property(gr => gr.Status).HasMaxLength(20).HasDefaultValue("Pending");
             e.Property(gr => gr.ResultData).HasColumnType("jsonb");
 
-            e.HasIndex(gr => gr.IdempotencyKey).IsUnique();
+            e.HasIndex(gr => gr.IdempotencyKey);
 
             e.HasOne(gr => gr.User)
                   .WithMany(u => u.GameRounds)
