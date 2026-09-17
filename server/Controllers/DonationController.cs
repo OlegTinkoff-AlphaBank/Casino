@@ -18,7 +18,11 @@ public class DonationController : ControllerBase
     [HttpGet("list")]
     public async Task<IActionResult> GetGamesList()
     {
-        return Ok(await _donationService.GetLast());
+        var d = await _donationService.GetLastDonationsAsync();
+        var res = "";
+        foreach (var dt in d)
+            res+=$"{dt.Amount} — {dt.RawComment}";
+        return Ok(res);
     }
     
 }
