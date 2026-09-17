@@ -10,7 +10,7 @@ public class User
     public string PasswordHash { get; set; }
     public decimal Balance { get; set; }
     public string Role { get; set; } = "User";
-    public string DonationAlertsCode { get; set; } //
+    public string DonationAlertsCode { get; set; } 
     public decimal GameRate { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

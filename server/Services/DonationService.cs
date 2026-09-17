@@ -23,7 +23,6 @@ public class DonationService
         var accessToken = _config["DonationAlerts:AccessToken"];
         var expiresAt = _config["DonationAlerts:ExpiresAt"];
 
-        // токен протух — рефрешим
         var client = _httpClientFactory.CreateClient();
         var resp = await client.PostAsync("https://www.donationalerts.com/oauth/token",
             new FormUrlEncodedContent(new Dictionary<string, string>
@@ -33,26 +32,11 @@ public class DonationService
                 ["client_secret"] = _config["DonationAlerts:ClientSecret"]!,
                 ["refresh_token"] = _config["DonationAlerts:RefreshToken"]!
             }));
-
+        
         var json = await resp.Content.ReadFromJsonAsync<JsonElement>();
         accessToken = json.GetProperty("access_token").GetString();
 
         return accessToken!;
-    }
-
-    public async Task<string?> GetLast(int page = 1)
-    {
-        var client = _httpClientFactory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-
-        var response = await client.GetAsync($"https://www.donationalerts.com/api/v1/alerts/donations");
-        var Json = await response.Content.ReadAsStringAsync();
-        using var data = JsonDocument.Parse(Json);
-        if (data.RootElement.TryGetProperty("data", out var dataElement))
-        {
-            return dataElement.GetRawText();
-        }
-        return Json;
     }
     
     public async Task<List<Donation>> GetLastDonationsAsync(int page = 1)
