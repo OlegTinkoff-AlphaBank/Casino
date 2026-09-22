@@ -1,0 +1,2 @@
+dotnet ef migrations add Init --project ../serverDB
+dotnet ef database update --project ../serverDB
