@@ -1,2 +1,6 @@
 dotnet ef migrations add Init --project ../serverDB
 dotnet ef database update --project ../serverDB
+
+UPDATE "Users"
+SET "Role" = 'Admin'
+WHERE "Username" = 'testAdmin';
