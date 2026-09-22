@@ -178,10 +178,10 @@ public class ServerDbContext : DbContext
                 OnAccsAmountLast = 0m,
                 OutCanAmount = 0m,
                 OnSafeAmount = 0m,
-                AllUsersRate = 0.5m,
-                AllGamesRate = 0.5m,
-                DART = "testDART",
-                DAEI = 0
+                AllUsersRate = 1.5m,
+                AllGamesRate = 1.0m,
+                DART = "def5020024f66918065eb5213933ca45e060721b886b6bb9cc6fbbf640d88bb5758e21403a24f302ad39b74f0b612deca588bbf5229409836db381afdc4f3941bedaa5577613f53ac144c79837c7c051772b71a775a0ff5f8de5ad2cb83d0ce59921bfe38c987634488dda3951f3e7922097af88bb525474bf373c367627eef21fdb3e3f5eab24cb1af5beeeb018527f81d75551696462e085f8dc8a711164439b44debfe44756f70b3b8a180c243a4b1a76e71e4ea871c058827a670e28251d0ad9e43adabaef948febbc3c6a663abfd4c397fac32a71f1d06ec62cace055ed00ef45dd817cd739874bdec472c73aa99facd9a273c80ac2fb82e2661b52b2f1f7727d0ee256c64d2048061b3d3543d23f64d38de5fb2293fdd27617eb8002c70f13fa8b66bb081256ddeea2144c0906a30c9f4eaf928d127b2f71d1be723310e004cf4039205e82a50cc64ec5024d725b98ccc7699e9163bb0146971bfb05eed9a5bb90436f829ef55538e01dcb6e6a4d8dfa083466642e05cc9dc20e223b814df6",
+                DAEI = 31536000
             }
         );
     }
