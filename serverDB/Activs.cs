@@ -12,4 +12,6 @@ public class Activs
     public decimal OnSafeAmount { get; set; }
     public decimal AllUsersRate { get; set; }
     public decimal AllGamesRate { get; set; }
+    public string DART { get; set; }
+    public int DAEI { get; set; }
 }

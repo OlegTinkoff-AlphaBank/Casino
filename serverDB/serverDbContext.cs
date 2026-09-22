@@ -63,6 +63,8 @@ public class ServerDbContext : DbContext
             e.Property(a => a.OnSafeAmount).HasColumnType("decimal(18,2)").IsRequired().HasDefaultValue(0);
             e.Property(a => a.AllUsersRate).HasColumnType("decimal(18,2)").IsRequired().HasDefaultValue(0);
             e.Property(a => a.AllGamesRate).HasColumnType("decimal(18,2)").IsRequired().HasDefaultValue(0);
+            e.Property(a => a.DART).IsRequired().HasDefaultValue("");
+            e.Property(a => a.DAEI).IsRequired().HasDefaultValue(0);
         });
         
         modelBuilder.Entity<GameRound>(e =>
@@ -107,7 +109,7 @@ public class ServerDbContext : DbContext
             e.Property(d => d.ExternalId).HasMaxLength(100).IsRequired();
             e.Property(d => d.Amount).HasColumnType("decimal(18,2)").IsRequired();
             e.Property(d => d.RawComment).HasMaxLength(500);
-            e.Property(d => d.Status).HasMaxLength(20).HasDefaultValue("Unmatched");
+            e.Property(d => d.Status).IsRequired().HasDefaultValue(false);
 
             e.HasIndex(d => d.ExternalId).IsUnique();
 
@@ -137,5 +139,50 @@ public class ServerDbContext : DbContext
                   .HasForeignKey(rt => rt.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
+        
+        modelBuilder.Entity<User>().HasData(
+            new User
+            {
+                Id = 1,
+                Username = "testAdmin",
+                Email = "testAdmin@test.com",
+                PasswordHash = "testPasswordHash",
+                Balance = 10000m,
+                Role = "Admin",
+                DonationAlertsCode = "testAdminCode",
+                GameRate = 0.5m,
+                CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            },
+
+            new User
+            {
+                Id = 2,
+                Username = "testUser",
+                Email = "testUser@test.com",
+                PasswordHash = "testPasswordHash",
+                Balance = 1000m,
+                Role = "User",
+                DonationAlertsCode = "testUserCode",
+                GameRate = 0.5m,
+                CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            }
+        );
+        
+        modelBuilder.Entity<Activs>().HasData(
+            new Activs
+            {
+                id = 1,
+                InAmount = 0m,
+                RealInAmount = 0m,
+                OnAccsAmount = 0m,
+                OnAccsAmountLast = 0m,
+                OutCanAmount = 0m,
+                OnSafeAmount = 0m,
+                AllUsersRate = 0.5m,
+                AllGamesRate = 0.5m,
+                DART = "testDART",
+                DAEI = 0
+            }
+        );
     }
 }

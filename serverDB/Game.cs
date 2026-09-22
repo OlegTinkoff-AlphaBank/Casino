@@ -8,6 +8,7 @@ public class Game
     public decimal MaxBet { get; set; }
     public bool IsActive { get; set; } = true;
     public decimal GameRate { get; set; }
+    public string Type { get; set; } = "";
     
     public ICollection<GameRound> GameRounds { get; set; }
     public ICollection<GameOutComes>  GameOutComes { get; set; }

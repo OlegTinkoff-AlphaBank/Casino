@@ -31,9 +31,17 @@ public class GameController : ControllerBase
 
     [HttpPost("bet")]
     [Authorize]
-    public async Task<IActionResult> GetBetById(PlayDTO dto)
+    public async Task<IActionResult> PostBetById(PlayDTO dto)
     {
-        var result = await _gameService.PlayRoundByGameIdAsync(dto);
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var result = await _gameService.PlayRoundByGameIdAsync(dto, userId);
         return Ok(new {result});
+    }
+    
+    [HttpGet("{gameId}/outcomes")]
+    public async Task<IActionResult> GetOutcomes(int gameId)
+    {
+        var outcomes = await _gameService.GetOutcomesAsync(gameId);
+        return Ok(outcomes);
     }
 }

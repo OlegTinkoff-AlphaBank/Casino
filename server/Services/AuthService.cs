@@ -91,4 +91,32 @@ public class AuthService
         RandomNumberGenerator.Fill(randomBytes);
         return Convert.ToBase64String(randomBytes);
     }
+    
+    public async Task<(string accessToken, string refreshToken)> RefreshAsync(string refreshToken)
+    {
+        var stored = await _db.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.Token == refreshToken);
+
+        if (stored is null || stored.IsRevoked || stored.ExpiresAt < DateTime.UtcNow)
+            throw new UnauthorizedAccessException("Refresh-токен недействителен");
+
+        var user = await _db.Users.FindAsync(stored.UserId)
+                   ?? throw new UnauthorizedAccessException("Пользователь не найден");
+
+        stored.IsRevoked = true; 
+
+        var newAccessToken = GenerateAccessToken(user);
+        var newRefreshToken = GenerateRefreshToken();
+
+        _db.RefreshTokens.Add(new RefreshToken
+        {
+            UserId = user.Id,
+            Token = newRefreshToken,
+            ExpiresAt = DateTime.UtcNow.AddDays(14),
+            IsRevoked = false
+        });
+
+        await _db.SaveChangesAsync();
+        return (newAccessToken, newRefreshToken);
+    }
 }

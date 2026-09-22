@@ -8,4 +8,5 @@ public class GameOutComes
     public decimal Multiplier { get; set; }
     public decimal Weight { get; set; }
     public bool IsActive { get; set; }
+    public string? ImageUrl { get; set; }
 }
