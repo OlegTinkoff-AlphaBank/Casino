@@ -111,8 +111,6 @@ public class ServerDbContext : DbContext
             e.Property(d => d.RawComment).HasMaxLength(500);
             e.Property(d => d.Status).IsRequired().HasDefaultValue(false);
 
-            e.HasIndex(d => d.ExternalId).IsUnique();
-
             e.HasOne(d => d.User)
                   .WithMany(u => u.Donations)
                   .HasForeignKey(d => d.UserId)
@@ -180,7 +178,7 @@ public class ServerDbContext : DbContext
                 OnSafeAmount = 0m,
                 AllUsersRate = 1.5m,
                 AllGamesRate = 1.0m,
-                DART = "def5020024f66918065eb5213933ca45e060721b886b6bb9cc6fbbf640d88bb5758e21403a24f302ad39b74f0b612deca588bbf5229409836db381afdc4f3941bedaa5577613f53ac144c79837c7c051772b71a775a0ff5f8de5ad2cb83d0ce59921bfe38c987634488dda3951f3e7922097af88bb525474bf373c367627eef21fdb3e3f5eab24cb1af5beeeb018527f81d75551696462e085f8dc8a711164439b44debfe44756f70b3b8a180c243a4b1a76e71e4ea871c058827a670e28251d0ad9e43adabaef948febbc3c6a663abfd4c397fac32a71f1d06ec62cace055ed00ef45dd817cd739874bdec472c73aa99facd9a273c80ac2fb82e2661b52b2f1f7727d0ee256c64d2048061b3d3543d23f64d38de5fb2293fdd27617eb8002c70f13fa8b66bb081256ddeea2144c0906a30c9f4eaf928d127b2f71d1be723310e004cf4039205e82a50cc64ec5024d725b98ccc7699e9163bb0146971bfb05eed9a5bb90436f829ef55538e01dcb6e6a4d8dfa083466642e05cc9dc20e223b814df6",
+                DART = "def50200be5fe74067a9e7d712bb044a3bfa9badc245b67d9b9ff8a58df3228e2c53eea94ce3e987a6ed82cb2a5172f1bc38391e887f9f9d01f043b89dde7fb8d7db6a7459825850dd559d9c60fd4b33f9a632b4a76ac8183e0f8f941057c02758aff1783c9645e82d4e0ab6b3748b6984ee5f8a982a04d990d130f81abfe7ef36e275d637b6d18abdd210ce80969722620c96de99c5470fe4e4e0e5b808a1eee49e588f86ab65a556c4e19794c2c14dee07cf8aedc99149634174182a67a639ca974abdd381f3ccf122a45be5b7dc49de6be2a7e8f379b769f5de12e9a1f716f893780872e6c613a542dd7288bd82a6b6348ecaa389371512d99113a6ced557467e41f8f2eca6b586d70652b2a44ce46f044e131ee0681d0a77a44bde27da97e28c37637b5c98a7b84a3b7468ec0bfe0a79744d59a0f2df0906d7fbfcd359e01482c5ef82c74178150f2eb970f58dbbd3074ac4baf9db5f21efd43ad6c170996e42c586f1f60c0c61d4181e2d5b700f302386f059df941fda561c898915e62cd111",
                 DAEI = 31536000
             }
         );
